@@ -30,12 +30,18 @@ while True:
         cnt = max(contours, key = cv.contourArea)
         rows,cols = img.shape[:2]
         [vx,vy,x,y] = cv.fitLine(cnt, cv.DIST_L2,0,0.01,0.01)
-        
+
+        M = cv.moments(cnt)
+        cx = int(M['m10']/M['m00'])
+        cy = int(M['m01']/M['m00'])
+
+        img = cv.circle(img, [cx,cy], 5, [100,90,90], 2)
         # I put this here because I was having issuse with the slope being undefined when straight up
         if vx > 0:
             lefty = int((-x*vy/vx) + y)
             righty = int(((cols-x)*vy/vx)+y)
             sd.putNumber("angle", (np.arctan(vy/vx)* 180) / np.pi)
+            sd.putNumberArray("center", [cx,cy])
             img = cv.line(img,(cols-1,righty),(0,lefty),(150,100,40),2)
     cv.imshow("Best Fit", img)
     
