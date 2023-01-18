@@ -36,10 +36,11 @@ while True:
         try:
             cx = int(M['m10']/M['m00'])
             cy = int(M['m01']/M['m00'])
+            img = cv.circle(img, [cx,cy], 5, [100,90,90], 2)
+
         except ZeroDivisionError:
             print('balls')
 
-        img = cv.circle(img, [cx,cy], 5, [100,90,90], 2)
         # I put this here because I was having issuse with the slope being undefined when straight up
         if vx > 0:
             lefty = int((-x*vy/vx) + y)
