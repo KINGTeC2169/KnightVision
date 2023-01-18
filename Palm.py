@@ -20,11 +20,16 @@ def findObjects(img):
         rows,cols = img.shape[:2]
         [vx,vy,x,y] = cv.fitLine(cnt, cv.DIST_L2,0,0.01,0.01)
 
+        
         M = cv.moments(cnt)
-        cx = int(M['m10']/M['m00'])
-        cy = int(M['m01']/M['m00'])
+        try:
+            cx = int(M['m10']/M['m00'])
+            cy = int(M['m01']/M['m00'])
+            img = cv.circle(img, [cx,cy], 5, [100,90,90], 2)
 
-        img = cv.circle(img, [cx,cy], 5, [100,90,90], 2)
+        except ZeroDivisionError:
+            print('balls')
+
         # I put this here because I was having issuse with the slope being undefined when straight up
         if vx > 0:
             lefty = int((-x*vy/vx) + y)
