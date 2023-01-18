@@ -3,6 +3,7 @@ import cv2 as cv
 import time
 import logging
 from networktables import NetworkTables
+import threading
 cap = cv.VideoCapture(0)
 
 NetworkTables.startClientTeam(2169)
@@ -11,20 +12,8 @@ time.sleep(5)
 
 sd = NetworkTables.getTable("SmartDashboard")
 logging.basicConfig(level=logging.DEBUG)
-if not cap.isOpened():
-    print("Cannot open camera")
-    exit()
-while True:
-    # Capture frame-by-frame
-    reta, img = cap.read()
-    # if frame is read correctly ret is True
-    if not reta:
-        print("Can't receive frame (stream end?). Exiting ...")
-        break
 
-    img = cv.cvtColor(img, cv.COLOR_BGR2HSV)
-    img = cv.GaussianBlur(img,(5,5),0)
-    img = cv.inRange(img,np.array([10,90,90]),np.array([43,255,255]))
+def findObjects(img):
     contours, heiarchy = cv.findContours(img, cv.RETR_TREE, cv.CHAIN_APPROX_NONE)
     if len(contours) != 0:
         cnt = max(contours, key = cv.contourArea)
@@ -43,6 +32,28 @@ while True:
             sd.putNumber("angle", (np.arctan(vy/vx)* 180) / np.pi)
             sd.putNumberArray("center", [cx,cy])
             img = cv.line(img,(cols-1,righty),(0,lefty),(150,100,40),2)
+    return img
+
+    
+if not cap.isOpened():
+    print("Cannot open camera")
+    exit()
+while True:
+    # Capture frame-by-frame
+    reta, img = cap.read()
+    # if frame is read correctly ret is True
+    if not reta:
+        print("Can't receive frame (stream end?). Exiting ...")
+        break
+
+    img = cv.cvtColor(img, cv.COLOR_BGR2HSV)
+    img = cv.GaussianBlur(img,(5,5),0)
+    yellowImg = cv.inRange(img,np.array([10,90,90]),np.array([43,255,255]))
+    purpleImg = cv.inRange(img,np.array([10,90,90]),np.array([43,255,255]))
+    img = findObjects(yellowImg)
+
+
+    
     cv.imshow("Best Fit", img)
     
 
