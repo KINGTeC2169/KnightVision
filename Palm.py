@@ -5,21 +5,22 @@ import logging
 from networktables import NetworkTables
 import threading
 cap = cv.VideoCapture(1)
-cap.set(3,1280)
-cap.set(4,720)
+cap.set(3,480)
+cap.set(4,480)
 
 NetworkTables.startClientTeam(2169)
 NetworkTables.initialize(server= "10.21.69.2")
-time.sleep(5)
 
 sd = NetworkTables.getTable("SmartDashboard")
 logging.basicConfig(level=logging.DEBUG)
+lastSlope = 0
+badSlopeCount = 0
 
 def findObjects(img, name):
     contours, heiarchy = cv.findContours(img, cv.RETR_TREE, cv.CHAIN_APPROX_NONE)
     if len(contours) != 0:
         cnt = max(contours, key = cv.contourArea)
-        if cv.contourArea(cnt) > 50:
+        if cv.contourArea(cnt) > 100:
             rows,cols = img.shape[:2]
             [vx,vy,x,y] = cv.fitLine(cnt, cv.DIST_L2,0,0.01,0.01)
 
@@ -29,7 +30,7 @@ def findObjects(img, name):
                 cx = int(M['m10']/M['m00'])
                 cy = int(M['m01']/M['m00'])
                 img = cv.circle(img, [cx,cy], 5, [100,90,90], 2)
-                sd.putNumberArray("center", [cx,cy])
+                sd.putNumberArray("Palm-" + name + "-center", [cx,cy])
 
             except ZeroDivisionError:
                 print('balls')
@@ -38,8 +39,9 @@ def findObjects(img, name):
             if vx > 0:
                 lefty = int((-x*vy/vx) + y)
                 righty = int(((cols-x)*vy/vx)+y)
-                sd.putNumber("angle", (np.arctan(vy/vx)* 180) / np.pi)
+                sd.putNumber("Palm-" + name + "-angle", (np.arctan(vy/vx)* 180) / np.pi)
                 img = cv.line(img,(cols-1,righty),(0,lefty),(150,100,40),2)
+                
     cv.imshow(name, img)
 
 
@@ -60,7 +62,7 @@ while True:
     purpleImg = cv.inRange(img,np.array([113,90,110]),np.array([131,255,255]))
     yellowThread = threading.Thread(target=findObjects(yellowImg, "yellow"))
     purpleThread = threading.Thread(target=findObjects(purpleImg, "purple"))
-    print(NetworkTables.isConnected())
+    #print(NetworkTables.isConnected())
         
 
     if cv.waitKey(1) == ord('q'):
