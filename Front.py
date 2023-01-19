@@ -28,7 +28,7 @@ def findObjects(img, name):
                 cx = int(M['m10']/M['m00'])
                 cy = int(M['m01']/M['m00'])
                 img = cv.circle(img, [cx,cy], 5, [100,90,90], 2)
-                sd.putNumberArray("Front-" + name + "-center", [cx,cy])
+                sd.putNumberArray("Front-" + name + "-Center", [cx,cy])
 
             except ZeroDivisionError:
                 print('balls')
@@ -50,10 +50,10 @@ while True:
 
     img = cv.cvtColor(img, cv.COLOR_BGR2HSV)
     img = cv.GaussianBlur(img,(5,5),0)
-    yellowImg = cv.inRange(img,np.array([15,191,90]),np.array([33,255,255]))
-    purpleImg = cv.inRange(img,np.array([113,90,110]),np.array([131,255,255]))
-    yellowThread = threading.Thread(target=findObjects(yellowImg, "yellow"))
-    purpleThread = threading.Thread(target=findObjects(purpleImg, "purple"))
+    coneImg = cv.inRange(img,np.array([15,191,90]),np.array([33,255,255]))
+    cubeImg = cv.inRange(img,np.array([113,90,110]),np.array([131,255,255]))
+    coneThread = threading.Thread(target=findObjects(coneImg, "Cone"))
+    cubeThread = threading.Thread(target=findObjects(cubeImg, "Cube"))
     #print(NetworkTables.isConnected())
         
 

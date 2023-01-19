@@ -30,7 +30,7 @@ def findObjects(img, name):
                 cx = int(M['m10']/M['m00'])
                 cy = int(M['m01']/M['m00'])
                 img = cv.circle(img, [cx,cy], 5, [100,90,90], 2)
-                sd.putNumberArray("Palm-" + name + "-center", [cx,cy])
+                sd.putNumberArray("Palm-" + name + "-Center", [cx,cy])
 
             except ZeroDivisionError:
                 print('balls')
@@ -39,7 +39,7 @@ def findObjects(img, name):
             if vx > 0:
                 lefty = int((-x*vy/vx) + y)
                 righty = int(((cols-x)*vy/vx)+y)
-                sd.putNumber("Palm-" + name + "-angle", (np.arctan(vy/vx)* 180) / np.pi)
+                sd.putNumber("Palm-" + name + "-Angle", (np.arctan(vy/vx)* 180) / np.pi)
                 img = cv.line(img,(cols-1,righty),(0,lefty),(150,100,40),2)
                 
     cv.imshow(name, img)
@@ -58,10 +58,10 @@ while True:
 
     img = cv.cvtColor(img, cv.COLOR_BGR2HSV)
     img = cv.GaussianBlur(img,(5,5),0)
-    yellowImg = cv.inRange(img,np.array([15,191,90]),np.array([33,255,255]))
-    purpleImg = cv.inRange(img,np.array([113,90,110]),np.array([131,255,255]))
-    yellowThread = threading.Thread(target=findObjects(yellowImg, "yellow"))
-    purpleThread = threading.Thread(target=findObjects(purpleImg, "purple"))
+    coneImg = cv.inRange(img,np.array([15,191,90]),np.array([33,255,255]))
+    cubeImg = cv.inRange(img,np.array([113,90,110]),np.array([131,255,255]))
+    coneThread = threading.Thread(target=findObjects(coneImg, "Cone"))
+    cubeThread = threading.Thread(target=findObjects(cubeImg, "Cube"))
     #print(NetworkTables.isConnected())
         
 
