@@ -21,17 +21,18 @@ font = cv.FONT_HERSHEY_SIMPLEX
 # used to record the time at which we processed current frame
 new_frame_time = 0
 
-cap = cv.VideoCapture(0)
-cap.set(3,480)
-cap.set(4,480)
+cap = cv.VideoCapture(1)
+cap.set(3,1280)
+cap.set(4,720)
 while True:
     
     reta,img = cap.read()
     imgColor = img
     img = cv.GaussianBlur(img,(5,5),0)
-    img = cv.inRange(img,np.array([90,90,90]),np.array([255,255,255]))
+    img = cv.inRange(img,np.array([120,120,120]),np.array([255,255,255]))
+    cv.imshow("cat", img)
 
-    det = at_detector.detect(img, estimate_tag_pose=True, camera_params=(1094.0792723558673,1102.944239454779,534.2225320970867,455.8589473348692), tag_size=0.1524)
+    det = at_detector.detect(img, estimate_tag_pose=True, camera_params=(1083.1843730953367,1070.1431886531207,586.9131989071315,293.5012883025358), tag_size=0.1524)
     if len(det) > 0:
         maxDet = det[0]
         for i in det:

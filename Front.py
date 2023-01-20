@@ -5,8 +5,8 @@ import logging
 from networktables import NetworkTables
 import threading
 cap = cv.VideoCapture(1)
-cap.set(3,480)
-cap.set(4,480)
+cap.set(3,1280)
+cap.set(4,720)
 
 NetworkTables.startClientTeam(2169)
 NetworkTables.initialize(server= "10.21.69.2")
