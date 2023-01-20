@@ -13,11 +13,13 @@ at_detector = Detector(
    debug=0
 )
 prev_frame_time = 0
+font = cv.FONT_HERSHEY_SIMPLEX
+
   
 # used to record the time at which we processed current frame
 new_frame_time = 0
 
-cap = cv.VideoCapture(1)
+cap = cv.VideoCapture(0)
 cap.set(3,480)
 cap.set(4,480)
 while True:
@@ -31,7 +33,7 @@ while True:
     if len(det) > 0:
         maxDet = det[0]
         for i in det:
-            if i.decision_margin > maxDet.decision_margin:
+            if (i.decision_margin > maxDet.decision_margin) and (0 < i.tag_id < 9):
                 maxDet = i
         
         imgColor = cv.circle(imgColor, np.array(maxDet.corners.tolist()[0], dtype=np.int64), 10, [98,23,87], 5)
@@ -39,6 +41,8 @@ while True:
         imgColor = cv.circle(imgColor, np.array(maxDet.corners.tolist()[2], dtype=np.int64), 10, [98,23,87], 5)
         imgColor = cv.circle(imgColor, np.array(maxDet.corners.tolist()[3], dtype=np.int64), 10, [98,23,87], 5)
         imgColor = cv.circle(imgColor, np.array(maxDet.center.tolist(), dtype=np.int64), 10, [98,23,87], 5)
+        imgColor = cv.putText(imgColor, str(maxDet.tag_id), np.array(maxDet.center.tolist(), dtype=np.int64), font, 3, (100, 255, 0), 3, cv.LINE_AA)
+
     new_frame_time = time.time()
     fps = 1/(new_frame_time-prev_frame_time)
     prev_frame_time = new_frame_time
@@ -51,7 +55,6 @@ while True:
     fps = str(fps)
   
     # putting the FPS count on the frame
-    font = cv.FONT_HERSHEY_SIMPLEX
     cv.putText(imgColor, fps, (7, 70), font, 3, (100, 255, 0), 3, cv.LINE_AA)
     cv.imshow("hello", imgColor)
     if cv.waitKey(1) == ord('q'):
