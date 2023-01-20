@@ -12,6 +12,8 @@ at_detector = Detector(
    decode_sharpening=0.25,
    debug=0
 )
+
+
 prev_frame_time = 0
   
 # used to record the time at which we processed current frame
@@ -27,7 +29,7 @@ while True:
     img = cv.GaussianBlur(img,(5,5),0)
     img = cv.inRange(img,np.array([90,90,90]),np.array([255,255,255]))
 
-    det = at_detector.detect(img)
+    det = at_detector.detect(img, estimate_tag_pose=True, camera_params=(1094.0792723558673,1102.944239454779,534.2225320970867,455.8589473348692), tag_size=0.1524)
     if len(det) > 0:
         maxDet = det[0]
         for i in det:
@@ -39,6 +41,7 @@ while True:
         imgColor = cv.circle(imgColor, np.array(maxDet.corners.tolist()[2], dtype=np.int64), 10, [98,23,87], 5)
         imgColor = cv.circle(imgColor, np.array(maxDet.corners.tolist()[3], dtype=np.int64), 10, [98,23,87], 5)
         imgColor = cv.circle(imgColor, np.array(maxDet.center.tolist(), dtype=np.int64), 10, [98,23,87], 5)
+        print(maxDet.pose_t[2] * 39.3701)
     new_frame_time = time.time()
     fps = 1/(new_frame_time-prev_frame_time)
     prev_frame_time = new_frame_time
@@ -53,6 +56,7 @@ while True:
     # putting the FPS count on the frame
     font = cv.FONT_HERSHEY_SIMPLEX
     cv.putText(imgColor, fps, (7, 70), font, 3, (100, 255, 0), 3, cv.LINE_AA)
+    
     cv.imshow("hello", imgColor)
     if cv.waitKey(1) == ord('q'):
         break
