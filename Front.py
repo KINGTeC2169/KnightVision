@@ -4,7 +4,7 @@ import time
 import logging
 from networktables import NetworkTables
 import threading
-cap = cv.VideoCapture(1)
+cap = cv.VideoCapture(-1)
 cap.set(3,1280)
 cap.set(4,720)
 

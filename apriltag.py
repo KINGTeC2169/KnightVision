@@ -24,6 +24,8 @@ new_frame_time = 0
 cap = cv.VideoCapture(-1)
 cap.set(3,1280)
 cap.set(4,720)
+cap.set(cv.CAP_PROP_FPS, 30)
+cap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'MJPG'))
 while True:
     
     reta,img = cap.read()
