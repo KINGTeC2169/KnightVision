@@ -21,7 +21,7 @@ font = cv.FONT_HERSHEY_SIMPLEX
 # used to record the time at which we processed current frame
 new_frame_time = 0
 
-cap = cv.VideoCapture(1)
+cap = cv.VideoCapture(-1)
 cap.set(3,1280)
 cap.set(4,720)
 while True:
@@ -30,7 +30,6 @@ while True:
     imgColor = img
     img = cv.GaussianBlur(img,(5,5),0)
     img = cv.inRange(img,np.array([120,120,120]),np.array([255,255,255]))
-    cv.imshow("cat", img)
 
     det = at_detector.detect(img, estimate_tag_pose=True, camera_params=(1083.1843730953367,1070.1431886531207,586.9131989071315,293.5012883025358), tag_size=0.1524)
     if len(det) > 0:
@@ -44,7 +43,20 @@ while True:
         imgColor = cv.circle(imgColor, np.array(maxDet.corners.tolist()[2], dtype=np.int64), 10, [98,23,87], 5)
         imgColor = cv.circle(imgColor, np.array(maxDet.corners.tolist()[3], dtype=np.int64), 10, [98,23,87], 5)
         imgColor = cv.circle(imgColor, np.array(maxDet.center.tolist(), dtype=np.int64), 10, [98,23,87], 5)
-        print(maxDet.pose_t[2] * 39.3701)
+        pose_r = maxDet.pose_R
+        r11 = [0][0]
+        r12 = pose_r[0][1]
+        r13 = pose_r[0][2]
+        r21 = pose_r[1][0]
+        r22 = pose_r[1][1]
+        r23 = pose_r[1][2]
+        r31 = pose_r[2][0]
+        r32 = pose_r[2][1]
+        r33 = pose_r[2][2]
+        
+        AprilTagYaw = np.round(np.degrees(np.arctan(-r31/np.sqrt((r32 * r32)+(r33 * r33)))),3)
+        #AprilTagPitch = round(np.degrees(np.arctan(-r32/r33)),3)
+        #AprilTagRoll = round(np.degrees(np.arctan(r21/r11)),3)
         imgColor = cv.putText(imgColor, str(maxDet.tag_id), np.array(maxDet.center.tolist(), dtype=np.int64), font, 3, (100, 255, 0), 3, cv.LINE_AA)
 
     new_frame_time = time.time()
