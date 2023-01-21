@@ -21,14 +21,22 @@ font = cv.FONT_HERSHEY_SIMPLEX
 # used to record the time at which we processed current frame
 new_frame_time = 0
 
-cap = cv.VideoCapture(-1)
+cap = cv.VideoCapture(0)
 cap.set(3,1280)
 cap.set(4,720)
 cap.set(cv.CAP_PROP_FPS, 30)
 cap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'MJPG'))
+
+def rescale_frame(frame, percent=75):
+    width = int(frame.shape[1] * percent/ 100)
+    height = int(frame.shape[0] * percent/ 100)
+    dim = (width, height)
+    return cv.resize(frame, dim, interpolation =cv.INTER_AREA)
+
 while True:
     
     reta,img = cap.read()
+    img = rescale_frame(img, 50)
     imgColor = img
     img = cv.GaussianBlur(img,(5,5),0)
     img = cv.inRange(img,np.array([120,120,120]),np.array([255,255,255]))
