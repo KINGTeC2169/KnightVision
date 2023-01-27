@@ -21,19 +21,19 @@ font = cv.FONT_HERSHEY_SIMPLEX
 # used to record the time at which we processed current frame
 new_frame_time = 0
 
-cap = cv.VideoCapture(1)
+cap = cv.VideoCapture(-1)
 cap.set(3,1280)
 cap.set(4,800)
-cap.set(cv.CAP_PROP_FPS, 120)
-#cap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'MJPG'))
+#cap.set(cv.CAP_PROP_FPS, 120)
+cap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'MJPG'))
 
 while True:
     
     reta,img = cap.read()
     #img = rescale_frame(img, 50)
-    img = cv.GaussianBlur(img,(5,5),0)
-    img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-    #img = cv.inRange(img,np.array([120,120,120]),np.array([255,255,255]))
+    #img = cv.GaussianBlur(img,(5,5),0)
+    #img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+    img = cv.inRange(img,np.array([100,100,100]),np.array([255,255,255]))
 
     det = at_detector.detect(img, estimate_tag_pose=True, camera_params=(1083.1843730953367,1070.1431886531207,586.9131989071315,293.5012883025358), tag_size=0.1524)
     if len(det) > 0:
