@@ -21,7 +21,7 @@ font = cv.FONT_HERSHEY_SIMPLEX
 # used to record the time at which we processed current frame
 new_frame_time = 0
 
-cap = cv.VideoCapture(1)
+cap = cv.VideoCapture(3)
 cap.set(3,1280)
 cap.set(4,800)
 cap.set(cv.CAP_PROP_FPS, 120)

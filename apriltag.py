@@ -17,15 +17,16 @@ at_detector = Detector(
 prev_frame_time = 0
 font = cv.FONT_HERSHEY_SIMPLEX
 
-  
 # used to record the time at which we processed current frame
 new_frame_time = 0
-
-cap = cv.VideoCapture(-1)
+controlledby = int(input("Gimme a number: "))
+time.sleep(5)
+cap = cv.VideoCapture(controlledby)
 cap.set(3,1280)
 cap.set(4,800)
 #cap.set(cv.CAP_PROP_FPS, 120)
 cap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'MJPG'))
+
 
 while True:
     
@@ -76,8 +77,8 @@ while True:
   
     # putting the FPS count on the frame
     cv.putText(img, fps, (7, 70), font, 3, (100, 255, 0), 3, cv.LINE_AA)
-    
-    cv.imshow("hello", img)
+
+    cv.imshow(str(controlledby), img)
     if cv.waitKey(1) == ord('q'):
         break
 # When everything done, release the capture

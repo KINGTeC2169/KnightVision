@@ -4,7 +4,8 @@ import time
 import logging
 from networktables import NetworkTables
 import threading
-cap = cv.VideoCapture(1)
+controlledby = int(input("Gimme a number: "))
+cap = cv.VideoCapture(controlledby)
 cap.set(3,480)
 cap.set(4,480)
 
