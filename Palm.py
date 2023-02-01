@@ -33,7 +33,7 @@ def findObjects(img, name, index):
                 sd.putNumber("Palm-" + name + "-Angle", (np.arctan(vy/vx)* 180) / np.pi)
                 img = cv.line(img,(cols-1,righty),(0,lefty),(150,100,40),2)
                 
-    cv.imshow(name + " " + index, img)
+    cv.imshow(name + " " + str(index), img)
 
 def palm(index):
 

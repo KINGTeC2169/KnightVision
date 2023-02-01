@@ -28,7 +28,7 @@ def findObjects(img, name, index):
                 
 
 
-    cv.imshow(name + " " + index, img)
+    cv.imshow(name + " " + str(index), img)
 
 def Front(index):
     cap = cv.VideoCapture(index)
