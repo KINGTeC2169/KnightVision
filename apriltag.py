@@ -3,7 +3,7 @@ from pupil_apriltags import Detector
 import cv2 as cv
 import numpy as np
 
-def main():
+def aprilTags(index):
 
     at_detector = Detector(
     families="tag16h5",
@@ -21,9 +21,7 @@ def main():
 
     # used to record the time at which we processed current frame
     new_frame_time = 0
-    controlledby = int(input("Gimme a number: "))
-    time.sleep(5)
-    cap = cv.VideoCapture(controlledby)
+    cap = cv.VideoCapture(index)
     cap.set(3,1280)
     cap.set(4,800)
     #cap.set(cv.CAP_PROP_FPS, 120)
@@ -80,12 +78,16 @@ def main():
         # putting the FPS count on the frame
         cv.putText(img, fps, (7, 70), font, 3, (100, 255, 0), 3, cv.LINE_AA)
 
-        cv.imshow(str(controlledby), img)
+        cv.imshow(str(index), img)
         if cv.waitKey(1) == ord('q'):
             break
     # When everything done, release the capture
     cap.release()
     cv.destroyAllWindows()
 
+def main():
+    aprilTags(int(input("Gimme a number: ")))
+
 if __name__ == "__main__":
+
     main()

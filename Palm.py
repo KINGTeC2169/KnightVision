@@ -33,10 +33,9 @@ def findObjects(img, name):
                 
     cv.imshow(name, img)
 
-def main():
+def palm(index):
 
-    controlledby = int(input("Gimme a number: "))
-    cap = cv.VideoCapture(controlledby)
+    cap = cv.VideoCapture(index)
     cap.set(3,480)
     cap.set(4,480)
 
@@ -74,6 +73,10 @@ def main():
     # When everything done, release the capture
     cap.release()
     cv.destroyAllWindows()
+
+def main():
+    palm(int(input("Gimme a number: ")))
+
 
 if __name__ == "__main__":
     main()
