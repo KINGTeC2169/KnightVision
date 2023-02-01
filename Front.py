@@ -24,13 +24,12 @@ def findObjects(img, name):
                 print('balls')
 
                 
-    cv.imshow(str(controlledby) + " " + name, img)
 
-def main():
 
-    controlledby = int(input("Gimme a number: "))
-    time.sleep(5)
-    cap = cv.VideoCapture(controlledby)
+    cv.imshow(name, img)
+
+def Front(index):
+    cap = cv.VideoCapture(index)
     cap.set(3,480)
     cap.set(4,480)
     #cap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'MJPG'))
@@ -111,6 +110,12 @@ def main():
     # When everything done, release the capture
     cap.release()
     cv.destroyAllWindows()
+
+    
+def main():
+    Front(int(input("Gimme a number: ")))
+
+    
 
 if __name__ == "__main__":
     main()
