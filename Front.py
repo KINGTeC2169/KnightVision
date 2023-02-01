@@ -6,6 +6,8 @@ import logging
 from networktables import NetworkTables
 import threading
 
+sd = None
+
 def findObjects(img, name):
     contours, heiarchy = cv.findContours(img, cv.RETR_TREE, cv.CHAIN_APPROX_NONE)
     if len(contours) != 0:
