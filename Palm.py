@@ -4,18 +4,6 @@ import time
 import logging
 from networktables import NetworkTables
 import threading
-controlledby = int(input("Gimme a number: "))
-cap = cv.VideoCapture(controlledby)
-cap.set(3,480)
-cap.set(4,480)
-
-NetworkTables.startClientTeam(2169)
-NetworkTables.initialize(server= "10.21.69.2")
-
-sd = NetworkTables.getTable("SmartDashboard")
-logging.basicConfig(level=logging.DEBUG)
-lastSlope = 0
-badSlopeCount = 0
 
 def findObjects(img, name):
     contours, heiarchy = cv.findContours(img, cv.RETR_TREE, cv.CHAIN_APPROX_NONE)
@@ -45,29 +33,47 @@ def findObjects(img, name):
                 
     cv.imshow(name, img)
 
+def main():
 
-if not cap.isOpened():
-    print("Cannot open camera")
-    exit()
-while True:
-    # Capture frame-by-frame
-    reta, img = cap.read()
-    # if frame is read correctly ret is True
-    if not reta:
-        print("Can't receive frame (stream end?). Exiting ...")
-        break
+    controlledby = int(input("Gimme a number: "))
+    cap = cv.VideoCapture(controlledby)
+    cap.set(3,480)
+    cap.set(4,480)
 
-    img = cv.cvtColor(img, cv.COLOR_BGR2HSV)
-    img = cv.GaussianBlur(img,(5,5),0)
-    coneImg = cv.inRange(img,np.array([15,191,90]),np.array([33,255,255]))
-    cubeImg = cv.inRange(img,np.array([113,90,110]),np.array([131,255,255]))
-    coneThread = threading.Thread(target=findObjects(coneImg, "Cone"))
-    cubeThread = threading.Thread(target=findObjects(cubeImg, "Cube"))
-    #print(NetworkTables.isConnected())
-        
+    NetworkTables.startClientTeam(2169)
+    NetworkTables.initialize(server= "10.21.69.2")
 
-    if cv.waitKey(1) == ord('q'):
-        break
-# When everything done, release the capture
-cap.release()
-cv.destroyAllWindows()
+    sd = NetworkTables.getTable("SmartDashboard")
+    logging.basicConfig(level=logging.DEBUG)
+    lastSlope = 0
+    badSlopeCount = 0
+
+
+    if not cap.isOpened():
+        print("Cannot open camera")
+        exit()
+    while True:
+        # Capture frame-by-frame
+        reta, img = cap.read()
+        # if frame is read correctly ret is True
+        if not reta:
+            print("Can't receive frame (stream end?). Exiting ...")
+            break
+
+        img = cv.cvtColor(img, cv.COLOR_BGR2HSV)
+        img = cv.GaussianBlur(img,(5,5),0)
+        coneImg = cv.inRange(img,np.array([15,191,90]),np.array([33,255,255]))
+        cubeImg = cv.inRange(img,np.array([113,90,110]),np.array([131,255,255]))
+        coneThread = threading.Thread(target=findObjects(coneImg, "Cone"))
+        cubeThread = threading.Thread(target=findObjects(cubeImg, "Cube"))
+        #print(NetworkTables.isConnected())
+            
+
+        if cv.waitKey(1) == ord('q'):
+            break
+    # When everything done, release the capture
+    cap.release()
+    cv.destroyAllWindows()
+
+if __name__ == "__main__":
+    main()
