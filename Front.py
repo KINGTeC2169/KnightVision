@@ -8,7 +8,7 @@ import threading
 
 sd = None
 
-def findObjects(img, name):
+def findObjects(img, name, index):
     contours, heiarchy = cv.findContours(img, cv.RETR_TREE, cv.CHAIN_APPROX_NONE)
     if len(contours) != 0:
         cnt = max(contours, key = cv.contourArea)
@@ -28,7 +28,7 @@ def findObjects(img, name):
                 
 
 
-    cv.imshow(name, img)
+    cv.imshow(name + " " + index, img)
 
 def Front(index):
     cap = cv.VideoCapture(index)
@@ -102,8 +102,8 @@ def Front(index):
         img = cv.GaussianBlur(img,(5,5),0)
         coneImg = cv.inRange(img,np.array([15,191,90]),np.array([33,255,255]))
         cubeImg = cv.inRange(img,np.array([113,90,110]),np.array([131,255,255]))
-        coneThread = threading.Thread(target=findObjects(coneImg, "Cone"))
-        cubeThread = threading.Thread(target=findObjects(cubeImg, "Cube"))
+        coneThread = threading.Thread(target=findObjects(coneImg, "Cone", index))
+        cubeThread = threading.Thread(target=findObjects(cubeImg, "Cube", index))
         #print(NetworkTables.isConnected())
             
 
