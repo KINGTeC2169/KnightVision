@@ -1,9 +1,4 @@
 from multiprocessing import Process
-import time
-from pupil_apriltags import Detector
-import cv2 as cv
-import numpy as np
-import threading
 import Front
 import Palm
 import apriltag
