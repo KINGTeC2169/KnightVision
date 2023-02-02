@@ -19,9 +19,9 @@ at_detector = Detector(
 font = cv.FONT_HERSHEY_SIMPLEX
 
 
-frontIndex = 4
+frontIndex = 0
 palmIndex = 2
-apriltagLeftIndex = 0
+apriltagLeftIndex = 4
 apriltagRightIndex = 6
 
 
@@ -37,12 +37,12 @@ frontCap.set(4,480)
 palmCap.set(3,480)
 palmCap.set(4,480)
 
-apriltagLeftCap.set(3,1280)
-apriltagLeftCap.set(4,800)
+apriltagLeftCap.set(3,800)
+apriltagLeftCap.set(4,600)
 apriltagLeftCap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'MJPG'))
 
-apriltagRightCap.set(3,1280)
-apriltagRightCap.set(4,800)
+apriltagRightCap.set(3,800)
+apriltagRightCap.set(4,600)
 apriltagRightCap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'MJPG'))
 
 NetworkTables.startClientTeam(2169)
@@ -55,7 +55,7 @@ time.sleep(5)
 sd =  NetworkTables.getTable("SmartDashboard")
 
 def apriltag(img, name):
-    img = cv.inRange(img,np.array([100,100,100]),np.array([255,255,255]))
+    
 
     det = at_detector.detect(img, estimate_tag_pose=True, camera_params=(1083.1843730953367,1070.1431886531207,586.9131989071315,293.5012883025358), tag_size=0.1524)
     if len(det) > 0:
@@ -106,6 +106,32 @@ def findObjects(img, name, index, camId):
 
     cv.imshow(name + " " + str(index), img)
 
+def findObjWithLines(img, name, index, camId):
+    contours, heiarchy = cv.findContours(img, cv.RETR_TREE, cv.CHAIN_APPROX_NONE)
+    if len(contours) != 0:
+        cnt = max(contours, key = cv.contourArea)
+        if cv.contourArea(cnt) > 100:
+            rows,cols = img.shape[:2]
+            [vx,vy,x,y] = cv.fitLine(cnt, cv.DIST_L2,0,0.01,0.01)
+        
+            M = cv.moments(cnt)
+            try:
+                cx = int(M['m10']/M['m00'])
+                cy = int(M['m01']/M['m00'])
+                img = cv.circle(img, [cx,cy], 5, [100,90,90], 2)
+                sd.putNumberArray(camId + name + "-Center", [cx,cy])
+
+            except ZeroDivisionError:
+                print('balls')
+
+            if vx > 0:
+                lefty = int((-x*vy/vx) + y)
+                righty = int(((cols-x)*vy/vx)+y)
+                sd.putNumber("Palm-" + name + "-Angle", (np.arctan(vy/vx)* 180) / np.pi)
+                img = cv.line(img,(cols-1,righty),(0,lefty),(150,100,40),2)
+                
+    cv.imshow(name + " " + str(index), img)
+
 def cube(img, index, camId):
     img = cv.cvtColor(img, cv.COLOR_BGR2HSV)
     img = cv.GaussianBlur(img,(5,5),0)
@@ -113,12 +139,15 @@ def cube(img, index, camId):
     cubeImg = cv.inRange(img,np.array([113,90,110]),np.array([131,255,255]))
     findObjects(cubeImg, "Cube", index, camId)
 
-def cone(img, index, camId):
+def cone(img, index, camId, hasLines):
     img = cv.cvtColor(img, cv.COLOR_BGR2HSV)
     img = cv.GaussianBlur(img,(5,5),0)
-    #coneImg = cv.inRange(img,np.array([15,191,90]),np.array([33,255,255]))
-    cubeImg = cv.inRange(img,np.array([113,90,110]),np.array([131,255,255]))
-    findObjects(cubeImg, "Cone", index, camId)
+    coneImg = cv.inRange(img,np.array([15,191,90]),np.array([33,255,255]))
+    #cubeImg = cv.inRange(img,np.array([113,90,110]),np.array([131,255,255]))
+    if hasLines:
+        findObjWithLines(coneImg, "Cone", index, camId)
+    else:
+        findObjects(coneImg, "Cone", index, camId)
 
 
 
@@ -128,12 +157,17 @@ while True:
     ret3, imgAprilLeft = apriltagLeftCap.read()
     ret4, imgAprilRight = apriltagRightCap.read()
 
+    imgAprilLeft = cv.inRange(imgAprilLeft,np.array([100,100,100]),np.array([255,255,255]))
+    imgAprilRight = cv.inRange(imgAprilRight,np.array([100,100,100]),np.array([255,255,255]))
     apriltag(imgAprilLeft, "left")
     apriltag(imgAprilRight, "right")
+    
     #cv.imshow("balls", imgAprilRight)
-    cone(imgFront, frontIndex, "Front-")
+    cone(imgFront, frontIndex, "Front-", False)
     cube(imgFront, frontIndex, "Front-")
-    cone(imgPalm, palmIndex, "Palm-")
+    imgFront = cv.cvtColor(imgFront, cv.COLOR_BGR2GRAY)
+    apriltag(imgFront, "front")
+    cone(imgPalm, palmIndex, "Palm-", True)
     cube(imgPalm, palmIndex, "Palm-")
 
     if cv.waitKey(1) == ord('q'):
