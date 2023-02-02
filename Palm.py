@@ -37,6 +37,7 @@ def findObjects(img, name, index):
     cv.imshow(name + " " + str(index), img)
 
 def palm(index):
+    NetworkTableManager.getTables()
     
     
     cap = cv.VideoCapture(index)

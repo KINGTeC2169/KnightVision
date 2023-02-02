@@ -13,7 +13,7 @@ def getTables():
     global sd
     NetworkTables.startClientTeam(2169)
     NetworkTables.initialize(server= "10.21.69.2")
-    while NetworkTables.isConnected():
-        print(NetworkTables.isConnected)
+    while not NetworkTables.isConnected():
+        print(NetworkTables.isConnected())
     
     sd =  NetworkTables.getTable("SmartDashboard")
