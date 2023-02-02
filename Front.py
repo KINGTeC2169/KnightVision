@@ -6,9 +6,8 @@ import logging
 from networktables import NetworkTables
 import threading
 
-sd = None
 
-def findObjects(img, name, index):
+def findObjects(img, name, index, sd):
     contours, heiarchy = cv.findContours(img, cv.RETR_TREE, cv.CHAIN_APPROX_NONE)
     if len(contours) != 0:
         cnt = max(contours, key = cv.contourArea)
@@ -30,15 +29,12 @@ def findObjects(img, name, index):
 
     cv.imshow(name + " " + str(index), img)
 
-def Front(index):
+def Front(index, sd):
     cap = cv.VideoCapture(index)
     cap.set(3,480)
     cap.set(4,480)
     #cap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'MJPG'))
 
-
-    NetworkTables.startClientTeam(2169)
-    NetworkTables.initialize(server= "10.21.69.2")
     at_detector = Detector(
     families="tag16h5",
     nthreads=6,
@@ -48,11 +44,6 @@ def Front(index):
     decode_sharpening=0.25,
     debug=0
     )
-
-    sd = NetworkTables.getTable("SmartDashboard")
-    logging.basicConfig(level=logging.DEBUG)
-    lastSlope = 0
-    badSlopeCount = 0
 
 
 
@@ -102,8 +93,8 @@ def Front(index):
         img = cv.GaussianBlur(img,(5,5),0)
         coneImg = cv.inRange(img,np.array([15,191,90]),np.array([33,255,255]))
         cubeImg = cv.inRange(img,np.array([113,90,110]),np.array([131,255,255]))
-        coneThread = threading.Thread(target=findObjects(coneImg, "Cone", index))
-        cubeThread = threading.Thread(target=findObjects(cubeImg, "Cube", index))
+        coneThread = threading.Thread(target=findObjects(coneImg, "Cone", index, sd))
+        cubeThread = threading.Thread(target=findObjects(cubeImg, "Cube", index, sd))
         #print(NetworkTables.isConnected())
             
 
@@ -115,7 +106,7 @@ def Front(index):
 
     
 def main():
-    Front(int(input("Gimme a number: ")))
+    Front(int(input("Gimme a number: ")), None)
 
     
 

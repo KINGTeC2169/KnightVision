@@ -4,8 +4,9 @@ import time
 import logging
 from networktables import NetworkTables
 import threading
+import Organizer
+import NetworkTableManager
 
-sd = None
 
 def findObjects(img, name, index):
     contours, heiarchy = cv.findContours(img, cv.RETR_TREE, cv.CHAIN_APPROX_NONE)
@@ -21,7 +22,7 @@ def findObjects(img, name, index):
                 cx = int(M['m10']/M['m00'])
                 cy = int(M['m01']/M['m00'])
                 img = cv.circle(img, [cx,cy], 5, [100,90,90], 2)
-                sd.putNumberArray("Palm-" + name + "-Center", [cx,cy])
+                NetworkTableManager.sendNetworkTableNumberArray("Palm-" + name + "-Center", [cx,cy])
 
             except ZeroDivisionError:
                 print('balls')
@@ -30,24 +31,18 @@ def findObjects(img, name, index):
             if vx > 0:
                 lefty = int((-x*vy/vx) + y)
                 righty = int(((cols-x)*vy/vx)+y)
-                sd.putNumber("Palm-" + name + "-Angle", (np.arctan(vy/vx)* 180) / np.pi)
+                NetworkTableManager.sendNetworkTableNumber("Palm-" + name + "-Angle", (np.arctan(vy/vx)* 180) / np.pi)
                 img = cv.line(img,(cols-1,righty),(0,lefty),(150,100,40),2)
                 
     cv.imshow(name + " " + str(index), img)
 
 def palm(index):
-
+    
+    
     cap = cv.VideoCapture(index)
     cap.set(3,480)
     cap.set(4,480)
 
-    NetworkTables.startClientTeam(2169)
-    NetworkTables.initialize(server= "10.21.69.2")
-
-    sd = NetworkTables.getTable("SmartDashboard")
-    logging.basicConfig(level=logging.DEBUG)
-    lastSlope = 0
-    badSlopeCount = 0
 
 
     if not cap.isOpened():
@@ -76,9 +71,9 @@ def palm(index):
     cap.release()
     cv.destroyAllWindows()
 
-def main():
+def Organizer():
     palm(int(input("Gimme a number: ")))
 
 
 if __name__ == "__main__":
-    main()
+    Organizer()
