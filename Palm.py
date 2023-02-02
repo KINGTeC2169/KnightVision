@@ -22,7 +22,7 @@ def findObjects(img, name, index):
                 cx = int(M['m10']/M['m00'])
                 cy = int(M['m01']/M['m00'])
                 img = cv.circle(img, [cx,cy], 5, [100,90,90], 2)
-                multiprocessing.Array('i', 4)("Palm-" + name + "-Center", [cx,cy])
+                NetworkTableManager.sendNetworkTableNumberArray("Palm-" + name + "-Center", [cx,cy])
 
             except ZeroDivisionError:
                 print('balls')
@@ -37,6 +37,7 @@ def findObjects(img, name, index):
     cv.imshow(name + " " + str(index), img)
 
 def palm(index):
+    NetworkTableManager.getTables()
     
     
     cap = cv.VideoCapture(index)
