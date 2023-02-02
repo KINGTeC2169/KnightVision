@@ -96,7 +96,7 @@ def Front(index):
             AprilTagYaw = np.round(np.degrees(np.arctan(-r31/np.sqrt((r32 * r32)+(r33 * r33)))),3)
             #AprilTagPitch = round(np.degrees(np.arctan(-r32/r33)),3)
             #AprilTagRoll = round(np.degrees(np.arctan(r21/r11)),3)
-            cv.imshow("Front Apriltag " + index, imgApril)
+            cv.imshow("Front Apriltag " + str(index), imgApril)
 
         img = cv.cvtColor(img, cv.COLOR_BGR2HSV)
         img = cv.GaussianBlur(img,(5,5),0)
