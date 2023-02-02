@@ -4,7 +4,6 @@ from pupil_apriltags import Detector
 import time
 import logging
 from networktables import NetworkTables
-import NetworkTableManager
 
 
 at_detector = Detector(
@@ -36,6 +35,14 @@ apriltagCap2.set(3,1280)
 apriltagCap2.set(4,800)
 apriltagCap1.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'MJPG'))
 
+NetworkTables.startClientTeam(2169)
+NetworkTables.initialize(server= "10.21.69.2")
+
+while not NetworkTables.isConnected():
+    print("Connecting to network tables...")
+time.sleep(5)
+sd =  NetworkTables.getTable("SmartDashboard")
+
 def apriltag(img, name):
     det = at_detector.detect(img, estimate_tag_pose=True, camera_params=(1083.1843730953367,1070.1431886531207,586.9131989071315,293.5012883025358), tag_size=0.1524)
     if len(det) > 0:
@@ -64,7 +71,7 @@ def apriltag(img, name):
         #AprilTagPitch = round(np.degrees(np.arctan(-r32/r33)),3)
         #AprilTagRoll = round(np.degrees(np.arctan(r21/r11)),3)
         imgColor = cv.putText(img, str(maxDet.tag_id), np.array(maxDet.center.tolist(), dtype=np.int64), font, 3, (100, 255, 0), 3, cv.LINE_AA)
-        return imgColor
+        cv.imshow(name, imgColor)
 
 
 def findObjects(img, name, index):
@@ -79,7 +86,7 @@ def findObjects(img, name, index):
                 cx = int(M['m10']/M['m00'])
                 cy = int(M['m01']/M['m00'])
                 img = cv.circle(img, [cx,cy], 5, [100,90,90], 2)
-                NetworkTableManager.sendNetworkTableNumberArray("Front-" + name + "-Center", [cx,cy])
+                sd.putNumberArray("Front-" + name + "-Center", [cx,cy])
 
             except ZeroDivisionError:
                 print('balls')
