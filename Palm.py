@@ -4,8 +4,8 @@ import time
 import logging
 from networktables import NetworkTables
 import threading
-import Organizer
 import NetworkTableManager
+import multiprocessing
 
 
 def findObjects(img, name, index):
@@ -22,7 +22,7 @@ def findObjects(img, name, index):
                 cx = int(M['m10']/M['m00'])
                 cy = int(M['m01']/M['m00'])
                 img = cv.circle(img, [cx,cy], 5, [100,90,90], 2)
-                NetworkTableManager.sendNetworkTableNumberArray("Palm-" + name + "-Center", [cx,cy])
+                multiprocessing.Array('i', 4)("Palm-" + name + "-Center", [cx,cy])
 
             except ZeroDivisionError:
                 print('balls')

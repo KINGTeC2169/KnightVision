@@ -1,4 +1,6 @@
+import multiprocessing 
 from multiprocessing import Process
+import threading
 import Front
 import Palm
 import apriltag
@@ -8,9 +10,9 @@ import NetworkTableManager
 
 
 NetworkTableManager.getTables()
-NetworkTableManager.sendNetworkTableNumber("balls", 54.7)
     
-Process(target=Front.Front, args=(0, )).start()
-Process(target=Palm.palm, args=(2, )).start()
-Process(target=apriltag.aprilTags, args=(4, )).start()
-Process(target=apriltag.aprilTags, args=(6, )).start()
+#
+Front.Front(0)
+Palm.palm(2)
+apriltag.aprilTags(4)
+apriltag.aprilTags(6)

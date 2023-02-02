@@ -1,4 +1,5 @@
 from networktables import NetworkTables
+import multiprocessing
 sd = None
 
 def sendNetworkTableNumber(name, info):
@@ -12,7 +13,7 @@ def getTables():
     global sd
     NetworkTables.startClientTeam(2169)
     NetworkTables.initialize(server= "10.21.69.2")
-    while not NetworkTables.isConnected():
+    while NetworkTables.isConnected():
         print(NetworkTables.isConnected)
     
     sd =  NetworkTables.getTable("SmartDashboard")

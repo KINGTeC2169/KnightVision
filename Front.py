@@ -5,9 +5,10 @@ import time
 import logging
 from networktables import NetworkTables
 import threading
+import NetworkTableManager
 
 
-def findObjects(img, name, index, sd):
+def findObjects(img, name, index):
     contours, heiarchy = cv.findContours(img, cv.RETR_TREE, cv.CHAIN_APPROX_NONE)
     if len(contours) != 0:
         cnt = max(contours, key = cv.contourArea)
@@ -19,7 +20,7 @@ def findObjects(img, name, index, sd):
                 cx = int(M['m10']/M['m00'])
                 cy = int(M['m01']/M['m00'])
                 img = cv.circle(img, [cx,cy], 5, [100,90,90], 2)
-                sd.putNumberArray("Front-" + name + "-Center", [cx,cy])
+                NetworkTableManager.sendNetworkTableNumberArray("Front-" + name + "-Center", [cx,cy])
 
             except ZeroDivisionError:
                 print('balls')
@@ -29,7 +30,8 @@ def findObjects(img, name, index, sd):
 
     cv.imshow(name + " " + str(index), img)
 
-def Front(index, sd):
+def Front(index):
+    NetworkTableManager.getTables()
     cap = cv.VideoCapture(index)
     cap.set(3,480)
     cap.set(4,480)
@@ -93,8 +95,8 @@ def Front(index, sd):
         img = cv.GaussianBlur(img,(5,5),0)
         coneImg = cv.inRange(img,np.array([15,191,90]),np.array([33,255,255]))
         cubeImg = cv.inRange(img,np.array([113,90,110]),np.array([131,255,255]))
-        coneThread = threading.Thread(target=findObjects(coneImg, "Cone", index, sd))
-        cubeThread = threading.Thread(target=findObjects(cubeImg, "Cube", index, sd))
+        coneThread = threading.Thread(target=findObjects(coneImg, "Cone", index))
+        cubeThread = threading.Thread(target=findObjects(cubeImg, "Cube", index))
         #print(NetworkTables.isConnected())
             
 
@@ -106,7 +108,7 @@ def Front(index, sd):
 
     
 def main():
-    Front(int(input("Gimme a number: ")), None)
+    Front(int(input("Gimme a number: ")))
 
     
 
