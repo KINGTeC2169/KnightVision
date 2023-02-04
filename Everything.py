@@ -137,13 +137,13 @@ def findObjWithLines(img, name, index, camId):
             if vx > 0:
                 lefty = int((-x*vy/vx) + y)
                 righty = int(((cols-x)*vy/vx)+y)
-                sd.putNumber("Palm-" + name + "-Angle", (np.arctan(vy/vx)* 180) / np.pi)
+                sd.putNumber(camId + name + "-Angle", (np.arctan(vy/vx)* 180) / np.pi)
                 img = cv.line(img,(cols-1,righty),(0,lefty),(150,100,40),2)
                 
     cv.imshow(name + " " + str(index), img)
     if not newValue:
         sd.delete(camId + name + "-Center")
-        sd.delete("Palm-" + name + "-Angle")
+        sd.delete(camId + name + "-Angle")
 
 def cube(img, index, camId):
     img = cv.cvtColor(img, cv.COLOR_BGR2HSV)
