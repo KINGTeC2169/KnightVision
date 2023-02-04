@@ -46,7 +46,7 @@ apriltagRightCap.set(4,600)
 apriltagRightCap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'MJPG'))
 
 NetworkTables.startClientTeam(2169)
-NetworkTables.initialize(server= "10.21.69.2")
+NetworkTables.initialize(server= "localhost")
 while not NetworkTables.isConnected():
     print("Connecting to network tables...")
 time.sleep(5)
@@ -70,7 +70,6 @@ def apriltag(img, name):
             img = cv.circle(img, np.array(maxDet.corners.tolist()[3], dtype=np.int64), 10, [98,23,87], 5)
             img = cv.circle(img, np.array(maxDet.center.tolist(), dtype=np.int64), 10, [98,23,87], 5)
             pose_r = maxDet.pose_R
-            pose_t = maxDet.pose_t[2] * 39.3701
             r31 = pose_r[2][0]
             r32 = pose_r[2][1]
             r33 = pose_r[2][2]
@@ -78,7 +77,9 @@ def apriltag(img, name):
             AprilTagYaw = np.round(np.degrees(np.arctan(-r31/np.sqrt((r32 * r32)+(r33 * r33)))),3)
             newValue = True
             sd.putNumber(name + "-apriltag-Yaw", AprilTagYaw)
-            sd.putNumber(name + "-apriltag-X", pose_t)
+            sd.putNumber(name + "-apriltag-Z", maxDet.pose_t[1] * 39.3701)
+            sd.putNumber(name + "-apriltag-Y", maxDet.pose_t[2] * 39.3701)
+            sd.putNumber(name + "-apriltag-X", maxDet.pose_t[0] * 39.3701)
             sd.putNumber(name + "-apriltag-Id", maxDet.tag_id)
             #AprilTagPitch = round(np.degrees(np.arctan(-r32/r33)),3)
             #AprilTagRoll = round(np.degrees(np.arctan(r21/r11)),3)
@@ -87,6 +88,8 @@ def apriltag(img, name):
     if not newValue:
         sd.delete(name + "-apriltag-Yaw")
         sd.delete(name + "-apriltag-X")
+        sd.delete(name + "-apriltag-Y")
+        sd.delete(name + "-apriltag-Z")
         sd.delete(name + "-apriltag-Id")
 
 
