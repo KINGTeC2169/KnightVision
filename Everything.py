@@ -46,8 +46,8 @@ apriltagRightCap.set(4,600)
 apriltagRightCap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'MJPG'))
 
 NetworkTables.startClientTeam(2169)
-NetworkTables.initialize(server= "localhost")
-while not NetworkTables.isConnected():
+NetworkTables.initialize(server= "10.21.69.2")
+while NetworkTables.isConnected():
     print("Connecting to network tables...")
 time.sleep(5)
 
@@ -168,37 +168,41 @@ def cone(img, index, camId, hasLines):
 
 
 while True:
-    if frontCap.isOpened():
-        ret1, imgFront = frontCap.read()
-        cone(imgFront, frontIndex, "Front-", False)
-        cube(imgFront, frontIndex, "Front-")
-        imgFront = cv.cvtColor(imgFront, cv.COLOR_BGR2GRAY)
-        imgFront = cv.inRange(imgFront, np.array([120]),np.array([255]))
-        apriltag(imgFront, "front")
-        sd.putBoolean("Front", True)
-    else:
-        sd.putBoolean("Front", False)
-    if palmCap.isOpened():
-        ret2, imgPalm = palmCap.read()
-        cone(imgPalm, palmIndex, "Palm-", True)
-        cube(imgPalm, palmIndex, "Palm-")
-        sd.putBoolean("Palm", True)
-    else:
-        sd.putBoolean("Palm", False)
-    if apriltagLeftCap.isOpened():
-        ret3, imgAprilLeft = apriltagLeftCap.read()
-        imgAprilLeft = cv.inRange(imgAprilLeft,np.array([100,100,100]),np.array([255,255,255]))
-        apriltag(imgAprilLeft, "left")
-        sd.putBoolean("Left", True)
-    else:
-        sd.putBoolean("Left", False)
-    if apriltagRightCap.isOpened():
-        ret4, imgAprilRight = apriltagRightCap.read()
-        imgAprilRight = cv.inRange(imgAprilRight,np.array([100,100,100]),np.array([255,255,255]))
-        apriltag(imgAprilRight, "right")
-        sd.putBoolean("Right", True)
-    else:
-        sd.putBoolean("Right", False)
+    try:
+        if frontCap.isOpened():
+            ret1, imgFront = frontCap.read()
+            cone(imgFront, frontIndex, "Front-", False)
+            cube(imgFront, frontIndex, "Front-")
+            imgFront = cv.cvtColor(imgFront, cv.COLOR_BGR2GRAY)
+            imgFront = cv.inRange(imgFront, np.array([120]),np.array([255]))
+            apriltag(imgFront, "front")
+            sd.putBoolean("Front", True)
+        else:
+            sd.putBoolean("Front", False)
+        if palmCap.isOpened():
+            ret2, imgPalm = palmCap.read()
+            cone(imgPalm, palmIndex, "Palm-", True)
+            cube(imgPalm, palmIndex, "Palm-")
+            sd.putBoolean("Palm", True)
+        else:
+            sd.putBoolean("Palm", False)
+        if apriltagLeftCap.isOpened():
+            ret3, imgAprilLeft = apriltagLeftCap.read()
+            imgAprilLeft = cv.inRange(imgAprilLeft,np.array([100,100,100]),np.array([255,255,255]))
+            apriltag(imgAprilLeft, "left")
+            sd.putBoolean("Left", True)
+        else:
+            sd.putBoolean("Left", False)
+        if apriltagRightCap.isOpened():
+            ret4, imgAprilRight = apriltagRightCap.read()
+            imgAprilRight = cv.inRange(imgAprilRight,np.array([100,100,100]),np.array([255,255,255]))
+            apriltag(imgAprilRight, "right")
+            sd.putBoolean("Right", True)
+        else:
+            sd.putBoolean("Right", False)
+    except:
+        print("stuff got buggy")
+        
 
     
     
