@@ -54,10 +54,10 @@ time.sleep(5)
 
 sd =  NetworkTables.getTable("SmartDashboard")
 
-def apriltag(img, name):
-    
+def apriltag(img, name, fx, fy, cx, cy):
+
     newValue = False
-    det = at_detector.detect(img, estimate_tag_pose=True, camera_params=(1083.1843730953367,1070.1431886531207,586.9131989071315,293.5012883025358), tag_size=0.1524)
+    det = at_detector.detect(img, estimate_tag_pose=True, camera_params=(fx,fy,cx,cy), tag_size=0.1524)
     if len(det) > 0:
         maxDet = det[0]
         for i in det:
@@ -175,7 +175,7 @@ while True:
             cube(imgFront, frontIndex, "Front-")
             imgFront = cv.cvtColor(imgFront, cv.COLOR_BGR2GRAY)
             imgFront = cv.inRange(imgFront, np.array([120]),np.array([255]))
-            apriltag(imgFront, "front")
+            apriltag(imgFront, "front", 1083.1843730953367,1070.1431886531207,586.9131989071315,293.5012883025358)
             sd.putBoolean("Front", True)
         else:
             sd.putBoolean("Front", False)
@@ -189,14 +189,14 @@ while True:
         if apriltagLeftCap.isOpened():
             ret3, imgAprilLeft = apriltagLeftCap.read()
             imgAprilLeft = cv.inRange(imgAprilLeft,np.array([100,100,100]),np.array([255,255,255]))
-            apriltag(imgAprilLeft, "left")
+            apriltag(imgAprilLeft, "left", 732.65358523156, 734.9632727889218, 366.943605533931, 330.4303688178763)
             sd.putBoolean("Left", True)
         else:
             sd.putBoolean("Left", False)
         if apriltagRightCap.isOpened():
             ret4, imgAprilRight = apriltagRightCap.read()
             imgAprilRight = cv.inRange(imgAprilRight,np.array([100,100,100]),np.array([255,255,255]))
-            apriltag(imgAprilRight, "right")
+            apriltag(imgAprilRight, "right", 732.65358523156, 734.9632727889218, 366.943605533931, 330.4303688178763)
             sd.putBoolean("Right", True)
         else:
             sd.putBoolean("Right", False)
