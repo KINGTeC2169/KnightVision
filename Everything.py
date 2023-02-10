@@ -31,10 +31,10 @@ palmCap = cv.VideoCapture(palmIndex)
 apriltagLeftCap = cv.VideoCapture(apriltagLeftIndex)
 apriltagRightCap = cv.VideoCapture(apriltagRightIndex)
 
-frontCap.set(3,480)
+frontCap.set(3,640)
 frontCap.set(4,480)
 
-palmCap.set(3,480)
+palmCap.set(3,640)
 palmCap.set(4,480)
 
 apriltagLeftCap.set(3,800)
@@ -77,9 +77,9 @@ def apriltag(img, name, fx, fy, cx, cy):
             AprilTagYaw = np.round(np.degrees(np.arctan(-r31/np.sqrt((r32 * r32)+(r33 * r33)))),3)
             newValue = True
             sd.putNumber(name + "-apriltag-Yaw", AprilTagYaw)
-            sd.putNumber(name + "-apriltag-Z", maxDet.pose_t[1] * 39.3701)
-            sd.putNumber(name + "-apriltag-Y", maxDet.pose_t[2] * 39.3701)
-            sd.putNumber(name + "-apriltag-X", maxDet.pose_t[0] * 39.3701)
+            sd.putNumber(name + "-apriltag-Z", maxDet.pose_t[1])
+            sd.putNumber(name + "-apriltag-Y", maxDet.pose_t[2])
+            sd.putNumber(name + "-apriltag-X", maxDet.pose_t[0])
             sd.putNumber(name + "-apriltag-Id", maxDet.tag_id)
             #AprilTagPitch = round(np.degrees(np.arctan(-r32/r33)),3)
             #AprilTagRoll = round(np.degrees(np.arctan(r21/r11)),3)
@@ -175,7 +175,7 @@ while True:
             cube(imgFront, frontIndex, "Front-")
             imgFront = cv.cvtColor(imgFront, cv.COLOR_BGR2GRAY)
             imgFront = cv.inRange(imgFront, np.array([120]),np.array([255]))
-            apriltag(imgFront, "front", 1083.1843730953367,1070.1431886531207,586.9131989071315,293.5012883025358)
+            apriltag(imgFront, "front", 743.2092175170602,742.142809848907,326.4811764880153,233.65761973429647)
             sd.putBoolean("Front", True)
         else:
             sd.putBoolean("Front", False)
