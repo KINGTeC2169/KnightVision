@@ -88,14 +88,14 @@ apriltagRightCap.set(4,600)
 apriltagRightCap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'MJPG'))
 
 NetworkTables.startClientTeam(2169)
-NetworkTables.initialize(server= "localhost")
+NetworkTables.initialize(server= "10.21.69.2")
 imagesToSend = []
 while NetworkTables.isConnected():
     print("Connecting to network tables...")
 time.sleep(5)
 sock = socket.socket()
  # Set those constants for easy access
-TCP_IP = 'localhost'
+TCP_IP = '10.21.69.2'
 
 # Grab the port number from the command line
 TCP_PORT = int(5800)
@@ -241,6 +241,7 @@ while True:
         if frontCap.isOpened():
             ret1, imgFront = frontCap.read()
 
+
             cone(imgFront, frontIndex, "Front-", False)
             cube(imgFront, frontIndex, "Front-")
             imgFront = cv.cvtColor(imgFront, cv.COLOR_BGR2GRAY)
@@ -272,9 +273,8 @@ while True:
             sd.putBoolean("Right", False)
         Client.runClient(sock, concatenate_images(imagesToSend, 3))
         
-    except:
-        print("stuff got buggy")
-   
+    except Exception as e:
+        print("stuff got buggy " + str(e))
     
 
     
