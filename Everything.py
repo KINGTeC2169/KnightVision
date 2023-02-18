@@ -4,6 +4,48 @@ from pupil_apriltags import Detector
 import time
 import logging
 from networktables import NetworkTables
+import socket
+import sys
+import time
+import traceback
+import Client
+
+def concatenate_images(images, num_rows=3):
+    """
+    Concatenates a list of images horizontally, and then concatenates the rows vertically.
+    Args:
+        images (list): A list of images in the form of numpy arrays.
+        num_rows (int): The number of rows to concatenate the images in.
+    Returns:
+        A concatenated image as a numpy array.
+    """
+    # Check that the list of images is not empty
+    if not images:
+        return None
+
+    # Determine the number of rows and columns needed
+    num_images = len(images)
+    num_cols = (num_images + num_rows - 1) // num_rows
+    num_rows = min(num_rows, num_images)
+
+    # Create a black canvas to fill up empty spaces
+    canvas = np.zeros_like(images[0])
+
+    # Concatenate the images in each row
+    rows = []
+    for i in range(0, num_rows):
+        start = i * num_cols
+        end = min((i + 1) * num_cols, num_images)
+        row = images[start:end]
+        row += [canvas] * (num_cols - len(row))
+        row = cv.vconcat(row)
+        rows.append(row)
+
+    # Concatenate the rows vertically
+    result = cv.hconcat(rows)
+
+    return result
+
 
 
 at_detector = Detector(
@@ -46,10 +88,31 @@ apriltagRightCap.set(4,600)
 apriltagRightCap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'MJPG'))
 
 NetworkTables.startClientTeam(2169)
-NetworkTables.initialize(server= "10.21.69.2")
+NetworkTables.initialize(server= "localhost")
+imagesToSend = []
 while NetworkTables.isConnected():
     print("Connecting to network tables...")
 time.sleep(5)
+sock = socket.socket()
+ # Set those constants for easy access
+TCP_IP = 'localhost'
+
+# Grab the port number from the command line
+TCP_PORT = int(5800)
+
+    # Connect to the socket with the previous information
+print("Connecting to Socket")
+try:
+    sock.connect((TCP_IP, TCP_PORT))
+except:
+    print("cannot Connect")
+    
+
+    # Enable instant reconnection and disable timeout system
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+# Spread the good news
+print("Connected!")
 
 
 sd =  NetworkTables.getTable("SmartDashboard")
@@ -85,6 +148,7 @@ def apriltag(img, name, fx, fy, cx, cy):
             #AprilTagRoll = round(np.degrees(np.arctan(r21/r11)),3)
             imgColor = cv.putText(img, str(maxDet.tag_id), np.array(maxDet.center.tolist(), dtype=np.int64), font, 3, (100, 255, 0), 3, cv.LINE_AA)
     cv.imshow(name, img)
+    imagesToSend.append(img)
     if not newValue:
         sd.delete(name + "-apriltag-Yaw")
         sd.delete(name + "-apriltag-X")
@@ -113,6 +177,7 @@ def findObjects(img, name, index, camId):
                 print('balls')
 
     cv.imshow(name + " " + str(index), img)
+    imagesToSend.append(img)
     if not newValue:
         sd.delete(camId + name + "-Center")
         
@@ -144,6 +209,7 @@ def findObjWithLines(img, name, index, camId):
                 img = cv.line(img,(cols-1,righty),(0,lefty),(150,100,40),2)
                 
     cv.imshow(name + " " + str(index), img)
+    imagesToSend.append(img)
     if not newValue:
         sd.delete(camId + name + "-Center")
         sd.delete(camId + name + "-Angle")
@@ -168,9 +234,13 @@ def cone(img, index, camId, hasLines):
 
 
 while True:
+    imagesToSend.clear()
+    
+
     try:
         if frontCap.isOpened():
             ret1, imgFront = frontCap.read()
+
             cone(imgFront, frontIndex, "Front-", False)
             cube(imgFront, frontIndex, "Front-")
             imgFront = cv.cvtColor(imgFront, cv.COLOR_BGR2GRAY)
@@ -200,9 +270,12 @@ while True:
             sd.putBoolean("Right", True)
         else:
             sd.putBoolean("Right", False)
+        Client.runClient(sock, concatenate_images(imagesToSend, 3))
+        
     except:
         print("stuff got buggy")
-        
+   
+    
 
     
     
