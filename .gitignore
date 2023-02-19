@@ -8,3 +8,11 @@ __pycache__/NetworkTableManager.cpython-311.pyc
 __pycache__/Palm.cpython-311.pyc
 __pycache__/Client.cpython-39.pyc
 __pycache__/Everything.cpython-39.pyc
+__pycache__/Apriltags.cpython-311.pyc
+__pycache__/CameraServer.cpython-311.pyc
+__pycache__/FindCone.cpython-311.pyc
+__pycache__/FindCube.cpython-311.pyc
+__pycache__/FindObj.cpython-311.pyc
+__pycache__/FindObjWithSlopes.cpython-311.pyc
+__pycache__/NetworkTable.cpython-311.pyc
+__pycache__/SendVideo.cpython-311.pyc
