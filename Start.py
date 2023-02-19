@@ -19,8 +19,10 @@ apriltagLeftIndex = 4
 apriltagRightIndex = 6
 
 
+# /dev/v4l/by-path use this to get usb so they are perminent
 
-frontCap = cv.VideoCapture(frontIndex)
+frontCap = cv.VideoCapture()
+frontCap.open("/dev/v4l/by-id/usb-Azurewave_Integrated_Camera-video-index0")
 palmCap = cv.VideoCapture(palmIndex)
 apriltagLeftCap = cv.VideoCapture(apriltagLeftIndex)
 apriltagRightCap = cv.VideoCapture(apriltagRightIndex)
