@@ -82,8 +82,8 @@ class CameraServer(Thread):
                 decimg = cv2.imdecode(data, 1)
 
                 # Blow image back up to size
-                #newX, newY = decimg.shape[1] * 2, decimg.shape[0] * 2
-                #decimg = cv2.resize(decimg, (int(newX), int(newY)))
+                newX, newY = decimg.shape[1] * 2, decimg.shape[0] * 2
+                decimg = cv2.resize(decimg, (int(newX), int(newY)))
 
                 if self.debug:
 
