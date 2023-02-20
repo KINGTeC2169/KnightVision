@@ -21,14 +21,16 @@ apriltagRightIndex = 6
 
 # /dev/v4l/by-path use this to get usb so they are perminent
 
-frontCap = cv.VideoCapture()
-frontCap.open("/dev/v4l/by-id/usb-Azurewave_Integrated_Camera-video-index0")
-palmCap = cv.VideoCapture(palmIndex)
-apriltagLeftCap = cv.VideoCapture(apriltagLeftIndex)
-apriltagRightCap = cv.VideoCapture(apriltagRightIndex)
-
+frontCap = cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:1:1.0-video-index0")
+palmCap =  cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:2.2:1.0-video-index0")
+apriltagLeftCap = cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:2.3:1.0-video-index0")
+apriltagRightCap = cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:4:1.0-video-index0")
 frontCap.set(3,640)
 frontCap.set(4,480)
+frontCap.set(cv.CAP_PROP_FPS, 30)
+frontCap.set(cv.CAP_PROP_AUTO_EXPOSURE, 1) # manual mode
+frontCap.set(cv.CAP_PROP_EXPOSURE, 156)
+apriltagLeftCap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'YUYV'))
 
 palmCap.set(3,640)
 palmCap.set(4,480)
@@ -47,6 +49,7 @@ SendVideo.connect()
 
 while True:
     
+    
     try:
         if frontCap.isOpened():
             ret1, imgFront = frontCap.read()
@@ -55,8 +58,8 @@ while True:
             FindCone.cone(imgFront, frontIndex, "Front-", False)
             FindCube.cube(imgFront, frontIndex, "Front-")
             imgFront = cv.cvtColor(imgFront, cv.COLOR_BGR2GRAY)
-            imgFront = cv.inRange(imgFront, np.array([120]),np.array([255]))
-            Apriltags.apriltag(imgFront, "front", 743.2092175170602,742.142809848907,326.4811764880153,233.65761973429647)
+            imgFront = cv.inRange(imgFront, np.array([130]),np.array([255]))
+            Apriltags.apriltag(imgFront, "front", 701.04432511,708.99335128,319.52259892,208.60882142)
             if(NetworkTable.isConnected()):
                 NetworkTable.sd.putBoolean("Front", True)
             
@@ -79,7 +82,7 @@ while True:
             if(SendVideo.connected):
                 SendVideo.send(imgAprilLeft, SendVideo.LeftSock)
             imgAprilLeft = cv.inRange(imgAprilLeft,np.array([100,100,100]),np.array([255,255,255]))
-            Apriltags.apriltag(imgAprilLeft, "left", 732.65358523156, 734.9632727889218, 366.943605533931, 330.4303688178763)
+            Apriltags.apriltag(imgAprilLeft, "left", 704.57941327, 706.30723841, 363.85783483, 328.60592328)
             if(NetworkTable.isConnected()):
                 NetworkTable.sd.putBoolean("Left", True)
         else:
@@ -90,12 +93,13 @@ while True:
             if(SendVideo.connected):
                 SendVideo.send(imgAprilRight, SendVideo.RightSock)
             imgAprilRight = cv.inRange(imgAprilRight,np.array([100,100,100]),np.array([255,255,255]))
-            Apriltags.apriltag(imgAprilRight, "right", 732.65358523156, 734.9632727889218, 366.943605533931, 330.4303688178763)
+            Apriltags.apriltag(imgAprilRight, "right", 704.57941327, 706.30723841, 363.85783483, 328.60592328)
             if(NetworkTable.isConnected()):
                 NetworkTable.sd.putBoolean("Right", True)
         else:
             if(NetworkTable.isConnected()):
                 NetworkTable.sd.putBoolean("Right", False)
+        
         
     except Exception as e:
         print(e)

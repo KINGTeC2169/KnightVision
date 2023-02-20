@@ -6,7 +6,7 @@ import os
 import glob
  
 # Defining the dimensions of checkerboard
-CHECKERBOARD = (6,9)
+CHECKERBOARD = (6,8)
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
  
 # Creating vector to store vectors of 3D points for each checkerboard image
@@ -21,7 +21,7 @@ objp[0,:,:2] = np.mgrid[0:CHECKERBOARD[0], 0:CHECKERBOARD[1]].T.reshape(-1, 2)
 prev_img_shape = None
  
 # Extracting path of individual image stored in a given directory
-images = glob.glob('./imagesForCal/*.jpg')
+images = glob.glob('./imagesForCal/*.png')
 for fname in images:
     img = cv2.imread(fname)
     gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
