@@ -27,7 +27,7 @@ def connect():
     PalmSock = socket.socket()
     # Set those constants for easy access
     #10.21.69.2
-    TCP_IP = 'localhost'
+    TCP_IP = '10.21.69.2'
 
         # Connect to the socket with the previous information
     print("Connecting to Socket")
