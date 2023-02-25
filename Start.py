@@ -28,7 +28,7 @@ apriltagRightCap = cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:4:1.
 frontCap.set(3,640)
 frontCap.set(4,480)
 frontCap.set(cv.CAP_PROP_FPS, 30)
-frontCap.set(cv.CAP_PROP_AUTO_EXPOSURE, 1) # manual mode
+frontCap.set(cv.CAP_PROP_AUTO_EXPOSURE, 1)
 frontCap.set(cv.CAP_PROP_EXPOSURE, 156)
 apriltagLeftCap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'YUYV'))
 
@@ -51,6 +51,8 @@ while True:
     
     
     try:
+        if(not SendVideo.connected):
+            SendVideo.connect()
         if frontCap.isOpened():
             ret1, imgFront = frontCap.read()
             if(SendVideo.connected):
