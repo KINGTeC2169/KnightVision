@@ -19,11 +19,11 @@ apriltagLeftIndex = 4
 apriltagRightIndex = 6
 
 
-# /dev/v4l/by-path use this to get usb so they are perminent
+#ls /dev/v4l/by-path use this to get usb so they are perminent
 
 frontCap = cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:1:1.0-video-index0")
-palmCap =  cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:2.2:1.0-video-index0")
-apriltagLeftCap = cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:2.3:1.0-video-index0")
+palmCap =  cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:2:1.0-video-index0")
+apriltagLeftCap = cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:3:1.0-video-index0")
 apriltagRightCap = cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:4:1.0-video-index0")
 frontCap.set(3,640)
 frontCap.set(4,480)
