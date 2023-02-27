@@ -60,7 +60,7 @@ while True:
             FindCone.cone(imgFront, frontIndex, "Front-", False)
             FindCube.cube(imgFront, frontIndex, "Front-")
             imgFront = cv.cvtColor(imgFront, cv.COLOR_BGR2GRAY)
-            imgFront = cv.inRange(imgFront, np.array([130]),np.array([255]))
+            imgFront = cv.inRange(imgFront, np.array([110]),np.array([255]))
             Apriltags.apriltag(imgFront, "front", 701.04432511,708.99335128,319.52259892,208.60882142)
             if(NetworkTable.isConnected()):
                 NetworkTable.sd.putBoolean("Front", True)
