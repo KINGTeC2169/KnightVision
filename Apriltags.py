@@ -42,7 +42,7 @@ def apriltag(img, name, fx, fy, cx, cy):
             
             AprilTagYaw = np.round(np.degrees(np.arctan(-r31/np.sqrt((r32 * r32)+(r33 * r33)))),3)
             newValue = True
-            print(np.cos((AprilTagYaw * np.pi) / 180) * maxDet.pose_t[2])
+            print(AprilTagYaw)
             if(NetworkTable.isConnected()):
                 NetworkTable.sd.putNumber(name + "-apriltag-Yaw", AprilTagYaw)
                 #NetworkTable.sd.putNumber(name + "-apriltag-Z", maxDet.pose_t[1]) we dont really care about this
