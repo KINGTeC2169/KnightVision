@@ -25,12 +25,12 @@ frontCap = cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:1:1.0-video-
 palmCap =  cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:2:1.0-video-index0")
 apriltagLeftCap = cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:3:1.0-video-index0")
 apriltagRightCap = cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:4:1.0-video-index0")
-frontCap.set(3,640)
-frontCap.set(4,480)
-frontCap.set(cv.CAP_PROP_FPS, 30)
-frontCap.set(cv.CAP_PROP_AUTO_EXPOSURE, 1)
-frontCap.set(cv.CAP_PROP_EXPOSURE, 156)
-apriltagLeftCap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'YUYV'))
+frontCap.set(3,1280)
+frontCap.set(4,1024)
+#frontCap.set(cv.CAP_PROP_FPS, 30)
+#frontCap.set(cv.CAP_PROP_AUTO_EXPOSURE, 1)
+#frontCap.set(cv.CAP_PROP_EXPOSURE, 156)
+#apriltagLeftCap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'YUYV'))
 
 palmCap.set(3,640)
 palmCap.set(4,480)
@@ -43,17 +43,18 @@ apriltagRightCap.set(3,800)
 apriltagRightCap.set(4,600)
 apriltagRightCap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'MJPG'))
 
-NetworkTable.init()
-SendVideo.connect()
+#NetworkTable.init()
+#SendVideo.connect()
 
 
 while True:
     
     
     try:
-        if(not SendVideo.connected):
-            SendVideo.connect()
+        #if(not SendVideo.connected):
+         #   SendVideo.connect()
         if frontCap.isOpened():
+            print("balls")
             ret1, imgFront = frontCap.read()
             if(SendVideo.connected):
                 SendVideo.send(imgFront, SendVideo.FrontSock)
@@ -61,7 +62,7 @@ while True:
             FindCube.cube(imgFront, frontIndex, "Front-")
             imgFront = cv.cvtColor(imgFront, cv.COLOR_BGR2GRAY)
             imgFront = cv.inRange(imgFront, np.array([110]),np.array([255]))
-            Apriltags.apriltag(imgFront, "front", 701.04432511,708.99335128,319.52259892,208.60882142)
+            Apriltags.apriltag(imgFront, "front", 1.07102978e+03,1.18881927e+03,6.40229564e+02,5.21450746e+02)
             if(NetworkTable.isConnected()):
                 NetworkTable.sd.putBoolean("Front", True)
             

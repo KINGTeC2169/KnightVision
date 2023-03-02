@@ -15,7 +15,7 @@ def init():
     global sd
     NetworkTables.startClientTeam(2169)
     NetworkTables.initialize(server= "10.21.69.2")
-    while not NetworkTables.isConnected():
+    while NetworkTables.isConnected():
         print("Connecting to network tables...")
     sd = NetworkTables.getTable("SmartDashboard")
 
