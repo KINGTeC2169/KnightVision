@@ -30,7 +30,7 @@ frontCap.set(4,480)
 frontCap.set(cv.CAP_PROP_FPS, 30)
 frontCap.set(cv.CAP_PROP_AUTO_EXPOSURE, 1)
 frontCap.set(cv.CAP_PROP_EXPOSURE, 156)
-apriltagLeftCap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'YUYV'))
+#frontCap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'YUYV'))
 
 palmCap.set(3,640)
 palmCap.set(4,480)
