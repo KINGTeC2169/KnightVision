@@ -12,7 +12,6 @@ import numpy as np
 from networktables import NetworkTables
 from pupil_apriltags import Detector
 import SendVideo
-import undistort
 
 frontIndex = 0
 palmIndex = 2
@@ -28,10 +27,10 @@ apriltagLeftCap = cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:3:1.0
 apriltagRightCap = cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:4:1.0-video-index0")
 frontCap.set(3,1280)
 frontCap.set(4,1024)
-frontCap.set(cv.CAP_PROP_FPS, 60)
+#frontCap.set(cv.CAP_PROP_FPS, 30)
 #frontCap.set(cv.CAP_PROP_AUTO_EXPOSURE, 1)
 #frontCap.set(cv.CAP_PROP_EXPOSURE, 156)
-frontCap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'MJPG'))
+#apriltagLeftCap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'YUYV'))
 
 palmCap.set(3,640)
 palmCap.set(4,480)
@@ -45,7 +44,7 @@ apriltagRightCap.set(4,600)
 apriltagRightCap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'MJPG'))
 
 #NetworkTable.init()
-SendVideo.connect()
+#SendVideo.connect()
 
 
 while True:
@@ -55,14 +54,14 @@ while True:
         #if(not SendVideo.connected):
          #   SendVideo.connect()
         if frontCap.isOpened():
+            print("balls")
             ret1, imgFront = frontCap.read()
-            imgFront = undistort.undistort(imgFront)
             if(SendVideo.connected):
                 SendVideo.send(imgFront, SendVideo.FrontSock)
             FindCone.cone(imgFront, frontIndex, "Front-", False)
             FindCube.cube(imgFront, frontIndex, "Front-")
             imgFront = cv.cvtColor(imgFront, cv.COLOR_BGR2GRAY)
-            imgFront = cv.inRange(imgFront, np.array([115]),np.array([255]))
+            imgFront = cv.inRange(imgFront, np.array([110]),np.array([255]))
             Apriltags.apriltag(imgFront, "front", 1.07102978e+03,1.18881927e+03,6.40229564e+02,5.21450746e+02)
             if(NetworkTable.isConnected()):
                 NetworkTable.sd.putBoolean("Front", True)
