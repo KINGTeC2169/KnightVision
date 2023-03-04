@@ -36,10 +36,10 @@ def connect():
     RightSock.settimeout(5)
     LeftSock.settimeout(5)
     try:
-        FrontSock.connect((TCP_IP, 5800))
-        LeftSock.connect((TCP_IP, 5801))
-        RightSock.connect((TCP_IP, 5802))
-        PalmSock.connect((TCP_IP, 5803))
+        FrontSock.connect((TCP_IP, 1180))
+        LeftSock.connect((TCP_IP, 1181))
+        RightSock.connect((TCP_IP, 1182))
+        PalmSock.connect((TCP_IP, 1183))
         connected = True
     except(Exception):
         print(Exception)
