@@ -34,6 +34,11 @@ frontCap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'YUYV'))
 
 palmCap.set(3,640)
 palmCap.set(4,480)
+palmCap.set(cv.CAP_PROP_BRIGHTNESS, 20)
+palmCap.set(cv.CAP_PROP_FPS, 30)
+palmCap.set(cv.CAP_PROP_AUTO_EXPOSURE, 1)
+palmCap.set(cv.CAP_PROP_EXPOSURE, 56)
+palmCap.set(cv.CAP_PROP_SATURATION, 94)
 
 apriltagLeftCap.set(3,800)
 apriltagLeftCap.set(4,600)
@@ -51,8 +56,8 @@ while True:
     
     
     try:
-        #if(not SendVideo.connected):
-            #SendVideo.connect()
+        if(not SendVideo.connected):
+            SendVideo.connect()
         if frontCap.isOpened():
             ret1, imgFront = frontCap.read()
             if(SendVideo.connected):
