@@ -42,12 +42,13 @@ def apriltag(img, name, fx, fy, cx, cy):
             
             AprilTagYaw = np.round(np.degrees(np.arctan(-r31/np.sqrt((r32 * r32)+(r33 * r33)))),3)
             newValue = True
-            print(np.cos((AprilTagYaw * np.pi) / 180) * maxDet.pose_t[2])
+            print(maxDet.pose_t[0] * 39 - (maxDet.pose_t[2] * (np.sin((AprilTagYaw * np.pi) / 180 )) * 39))
+            #print(maxDet.pose_t[0] * 39)
             if(NetworkTable.isConnected()):
                 NetworkTable.sd.putNumber(name + "-apriltag-Yaw", AprilTagYaw)
                 #NetworkTable.sd.putNumber(name + "-apriltag-Z", maxDet.pose_t[1]) we dont really care about this
                 NetworkTable.sd.putNumber(name + "-apriltag-Y", np.cos((AprilTagYaw * np.pi) / 180) * maxDet.pose_t[2])
-                #NetworkTable.sd.putNumber(name + "-apriltag-X", maxDet.pose_t[0])
+                NetworkTable.sd.putNumber(name + "-apriltag-X", maxDet.pose_t[0] - (maxDet.pose_t[2] * (np.sin((AprilTagYaw * np.pi) / 180 ))))
                 NetworkTable.sd.putNumberArray(name + "-apriltag-Center", maxDet.center.tolist())
                 NetworkTable.sd.putNumber(name + "-apriltag-Id", maxDet.tag_id)
                 #AprilTagPitch = round(np.degrees(np.arctan(-r32/r33)),3)
