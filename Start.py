@@ -21,6 +21,8 @@ apriltagRightIndex = 6
 
 #ls /dev/v4l/by-path use this to get usb so they are perminent
 
+#git --git-dir=KnightVision/.git pull origin master - this will let you auto pull on init
+
 frontCap = cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:1:1.0-video-index0")
 palmCap =  cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:2:1.0-video-index0")
 apriltagLeftCap = cv.VideoCapture("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:3:1.0-video-index0")
