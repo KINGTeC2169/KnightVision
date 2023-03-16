@@ -16,7 +16,7 @@ from pupil_apriltags import Detector
 def cone(img, index, camId, hasLines):
     img = cv.cvtColor(img, cv.COLOR_BGR2HSV)
     img = cv.GaussianBlur(img,(5,5),0)
-    coneImg = cv.inRange(img,np.array([15,191,90]),np.array([33,255,255]))
+    coneImg = cv.inRange(img,np.array([18,96,192]),np.array([76,255 ,255]))
     #cubeImg = cv.inRange(img,np.array([113,90,110]),np.array([131,255,255]))
     if hasLines:
         FindObjWithSlopes.findObjWithLines(coneImg, "Cone", index, camId)

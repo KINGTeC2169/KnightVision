@@ -16,5 +16,5 @@ def cube(img, index, camId):
     img = cv.cvtColor(img, cv.COLOR_BGR2HSV)
     img = cv.GaussianBlur(img,(5,5),0)
     #coneImg = cv.inRange(img,np.array([15,191,90]),np.array([33,255,255]))
-    cubeImg = cv.inRange(img,np.array([113,90,110]),np.array([131,255,255]))
+    cubeImg = cv.inRange(img,np.array([119,17,217]),np.array([154,255,255]))
     FindObj.findObjects(cubeImg, "Cube", index, camId)
